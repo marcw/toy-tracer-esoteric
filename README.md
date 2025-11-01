@@ -13,6 +13,7 @@ a raytracer. The most esoteric the language for a raytracer, the better.
 | Erlang    | Sonnet 4.5 (multiple iterations) | ![erlang](erlang/output.png)                  |
 | C         | Sonnet 4.5 (oneshot) | ![c](c/output.png)                            |
 | Ruby      | Sonnet 4.5 (oneshot) | ![ruby](ruby/output.png)                      |
+| Prolog      | Sonnet 4.5 (a few iterations) | ![prolog](prolog/output.png)                      |
 
 ## Notes
 
