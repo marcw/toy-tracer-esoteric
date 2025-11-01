@@ -14,11 +14,11 @@ The outputs are dramatically different. The erlang implementation doesn't seem t
 
 Reference C output:
 
-![output-reference.tga](output-reference.tga)
+![output-reference.png](output-reference.png)
 
 Erlang output:
 
-![output.tga](output.tga)
+![output.png](output.png)
 
 ## Quick Start
 
