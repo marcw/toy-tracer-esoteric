@@ -25,7 +25,7 @@ build_header(Width, Height) ->
     XOrigin = 0,
     YOrigin = 0,
     BitsPerPixel = 32,      % 32-bit BGRA
-    ImageDescriptor = 8,    % 8-bit alpha, origin at top-left
+    ImageDescriptor = 40,   % 8-bit alpha, origin at top-left (bit 5 set)
 
     <<IDLength:8,
       ColorMapType:8,

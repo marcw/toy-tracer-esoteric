@@ -3,46 +3,50 @@
 
 %% Scene management and ray tracing logic
 
-%% Creates the default scene: cube on a checkerboard plane
-%% As specified in AGENTS.md section 8
+%% Creates the default scene: matches the C reference scene
+%% Plane, cube, sphere, cylinder, and torus with specific materials
 default_scene() ->
-    %% Ground plane with checkerboard pattern
+    %% Ground plane with white diffuse material
     Ground = plane:new(
         {0.0, -1.0, 0.0},     % Point on plane
         {0.0, 1.0, 0.0},      % Normal (pointing up)
-        checkerboard           % Special material type
+        material:new({0.9, 0.9, 0.9}, 1.0, 0.0)  % White diffuse
     ),
 
-    %% Metal cube at the scene center
+    %% Metal cube (silver-ish with roughness)
+    %% Note: rotation not yet implemented, using position only
     Cube = cube:new(
-        {0.0, 0.0, 5.0},      % Center position
-        1.0,                   % Half-size (1.0 means 2x2x2 cube)
-        material:metal()       % Metallic material
+        {1.4, -0.3, 5.5},     % Center position
+        0.9,                   % Half-size (1.8 / 2)
+        material:new({0.85, 0.84, 0.80}, 0.35, 1.0)  % Metallic silver
     ),
 
-    %% Additional objects to showcase all primitives
+    %% Red diffuse sphere
     Sphere = sphere:new(
-        {-3.0, 0.0, 5.0},     % Position
-        1.0,                   % Radius
-        material:new({0.8, 0.2, 0.2}, 0.3, 0.0)  % Red diffuse
+        {-1.6, -0.1, 4.5},    % Position
+        0.9,                   % Radius
+        material:new({0.75, 0.15, 0.12}, 1.0, 0.0)  % Red diffuse
     ),
 
+    %% Blue diffuse cylinder (upright)
     Cylinder = cylinder:new(
-        {3.0, 0.0, 5.0},      % Position
-        0.7,                   % Radius
-        1.5,                   % Height
-        material:new({0.2, 0.8, 0.2}, 0.4, 0.0)  % Green diffuse
+        {-3.0, 0.0, 7.0},     % Position
+        0.6,                   % Radius
+        1.1,                   % Height (2.2 / 2)
+        material:new({0.15, 0.35, 0.70}, 1.0, 0.0)  % Blue diffuse
     ),
 
+    %% Gold metallic torus
+    %% Note: rotation not yet implemented, using position only
     Torus = torus:new(
-        {0.0, 0.0, 8.0},      % Position
-        1.5,                   % Major radius
-        0.5,                   % Minor radius
-        material:new({0.2, 0.2, 0.8}, 0.2, 0.8)  % Blue metallic
+        {0.0, 0.5, 8.0},      % Position
+        1.6,                   % Major radius
+        0.4,                   % Minor radius
+        material:new({0.95, 0.65, 0.25}, 0.25, 1.0)  % Gold metal
     ),
 
     %% Point light positioned above and to the side
-    Light = {light, {5.0, 5.0, 0.0}, 100.0},  % {Position, Intensity}
+    Light = {light, {6.0, 5.0, -2.0}, 55.0},  % {Position, Intensity}
 
     %% Camera setup
     Camera = camera:new(
@@ -133,6 +137,8 @@ get_normal({torus, _C, _MR, _mR, _M} = Torus, Point) ->
 %% Get material for an object (handling checkerboard special case)
 get_material({plane, _Point, _Normal, checkerboard}, HitPoint) ->
     material:checkerboard(HitPoint, 1.0);
+get_material({plane, _Point, _Normal, Material}, _HitPoint) ->
+    Material;
 get_material({sphere, _Center, _Radius, Material}, _HitPoint) ->
     Material;
 get_material({cube, _Center, _Size, Material}, _HitPoint) ->
@@ -164,13 +170,7 @@ check_shadow_recursive(ShadowRay, [Object | Rest], LightDist) ->
             check_shadow_recursive(ShadowRay, Rest, LightDist)
     end.
 
-%% Background gradient (sky)
-background_color(Ray) ->
-    {ray, _Origin, Direction} = Ray,
-    {_X, Y, _Z} = vec3:normalize(Direction),
-
-    %% Interpolate between blue (bottom) and white (top) based on Y
-    T = 0.5 * (Y + 1.0),
-    White = {1.0, 1.0, 1.0},
-    Blue = {0.5, 0.7, 1.0},
-    vec3:mix(White, Blue, T).
+%% Background color (solid dark blue-gray)
+background_color(_Ray) ->
+    %% Matches C reference: vec3(0.08f, 0.10f, 0.16f)
+    {0.08, 0.10, 0.16}.
