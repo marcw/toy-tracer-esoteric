@@ -15,7 +15,7 @@ The outputs are dramatically different. The erlang implementation doesn't seem t
 
 Reference C output:
 
-![output-reference.png](output-reference.png)
+![output-reference.png](../output-reference.png)
 
 Erlang output:
 
